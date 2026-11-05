@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "description": "Starting point for a product website and versioned docs site: the shared frame, consent gate, checks and Cloudflare Pages deploy, with no brand.",
-  "author": "Shane",
-  "license": "MIT",
+  "author": "The template-website-docs Authors",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/the-rabbit-hole-tech/template-website-docs.git"
