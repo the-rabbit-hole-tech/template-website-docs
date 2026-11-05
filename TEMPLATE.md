@@ -96,6 +96,13 @@ checks every value before it writes anything.
 9. Commit the result in one PR, and say in its body which template release the product started
    from: the tag of the release the clone came from (the newest one on the template's Releases
    page when it was made, for example `v1.2.0`). That tag is where the next sync starts.
+   Record it in the product's AGENTS.md too, under a `## Template sync` heading, as a bullet that
+   starts with this line, so a check can compare it with this template's latest release and flag
+   a product that has fallen behind:
+
+   ```markdown
+   - Last synced to `the-rabbit-hole-tech/template-website-docs` release **v1.2.0**
+   ```
 
 ## 🔁 Taking later template fixes
 
@@ -121,7 +128,7 @@ newer one: always tag to tag, never from a commit between releases. The product'
    ```
 
    `-x` records the template commit in the product's commit message. Name both tags in the PR
-   body; the new one is where the next sync starts.
+   body, and change the sync line in AGENTS.md to the new one: that's where the next sync starts.
 
 3. Where a fix touches a line the product filled in or rebranded, the cherry-pick stops with a
    conflict: keep the product's value and the template's change around it. Lines that still hold a
