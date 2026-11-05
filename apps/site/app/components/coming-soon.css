@@ -1,0 +1,53 @@
+/* The coming-soon page (routes/coming-soon.tsx): the mark, the name and the
+   tagline centred in the window, with the legal line at the foot. Every
+   colour is a frame token, so both themes follow. */
+.soon {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.soon__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-block: 4rem;
+  text-align: center;
+}
+
+.soon__mark {
+  width: 6rem;
+  height: 6rem;
+}
+
+.soon__name {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.soon__tagline {
+  max-width: 36rem;
+  color: var(--frame-ink);
+  font-size: 1.25rem;
+}
+
+.soon__line {
+  color: var(--frame-muted);
+}
+
+.soon__footer {
+  border-top: 1px solid var(--frame-border);
+  padding-block: var(--frame-legal-pad);
+}
+
+.soon__legal {
+  color: var(--frame-muted);
+  font-size: var(--frame-legal-size);
+  line-height: var(--frame-legal-line);
+  text-align: center;
+}

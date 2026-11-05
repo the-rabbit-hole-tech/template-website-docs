@@ -1,0 +1,64 @@
+/*
+MIT License
+
+Copyright (c) 2026 Shane
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+import assert from "node:assert/strict";
+import { test } from "node:test";
+
+import { stripEmoji } from "./emoji.ts";
+
+test("a leading emoji and its space come off a label", () => {
+  assert.equal(stripEmoji("\u{1F510} What is Example?"), "What is Example?");
+  assert.equal(stripEmoji("\u{270B} Approving requests"), "Approving requests");
+});
+
+test("emoji with a variation selector, a modifier or a joiner come off whole", () => {
+  assert.equal(
+    stripEmoji("\u{2638}\u{FE0F} Deploy with Helm"),
+    "Deploy with Helm",
+  );
+  assert.equal(stripEmoji("\u{1F5A5}\u{FE0F} The web UI"), "The web UI");
+  assert.equal(stripEmoji("\u{1F44B}\u{1F3FD} Hello"), "Hello");
+  assert.equal(
+    stripEmoji("\u{1F9D1}\u{200D}\u{1F4BB} Contributing"),
+    "Contributing",
+  );
+  assert.equal(stripEmoji("Keys \u{1F511} stay put"), "Keys stay put");
+});
+
+test("text symbols that only look like emoji stay", () => {
+  assert.equal(
+    stripEmoji("Example\u{2122} and \u{A9}, \u{AE}"),
+    "Example\u{2122} and \u{A9}, \u{AE}",
+  );
+  assert.equal(
+    stripEmoji("A \u{2194} B, step 1 \u{2192} 2"),
+    "A \u{2194} B, step 1 \u{2192} 2",
+  );
+  assert.equal(stripEmoji("RFC 5280 #1"), "RFC 5280 #1");
+});
+
+test("markup in a heading survives", () => {
+  assert.equal(
+    stripEmoji("\u{1F4C4} Config: <code>config.yaml</code>"),
+    "Config: <code>config.yaml</code>",
+  );
+});

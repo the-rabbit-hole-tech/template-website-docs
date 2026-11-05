@@ -1,0 +1,124 @@
+/*
+MIT License
+
+Copyright (c) 2026 Shane
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+import assert from "node:assert/strict";
+import { test } from "node:test";
+
+import {
+  DEFAULT_DOCS_PAGES,
+  loadPage,
+  parseArguments,
+  storageWritesIn,
+} from "./check-no-storage.mjs";
+
+test("a page whose head scripts only read storage passes", async () => {
+  const html =
+    '<html><head><script>try{if(localStorage.getItem("a")==="b")document.documentElement.setAttribute("data-x","y")}catch(e){}</script></head></html>';
+  const { writes } = await storageWritesIn(html, "page.html");
+  assert.deepEqual(writes, []);
+});
+
+test("a page script that writes localStorage, sessionStorage or a cookie is caught", async () => {
+  for (const write of [
+    'localStorage.setItem("theme","dark")',
+    'window.sessionStorage.setItem("k","v")',
+    'document.cookie="a=b"',
+    'localStorage.setItem("x","1");localStorage.removeItem("x")',
+  ]) {
+    const { writes } = await storageWritesIn(
+      `<script>${write}</script>`,
+      "page.html",
+    );
+    assert.ok(writes.length > 0, write);
+  }
+});
+
+test("removing a key that isn't there doesn't count as a write", async () => {
+  const { writes } = await storageWritesIn(
+    '<script>localStorage.removeItem("theme")</script>',
+    "page.html",
+  );
+  assert.deepEqual(writes, []);
+});
+
+test("inline scripts really run, so a reading script can act", async () => {
+  const { dom } = await loadPage(
+    '<html><body><script>document.documentElement.setAttribute("data-ran","yes")</script></body></html>',
+  );
+  assert.equal(dom.window.document.documentElement.dataset.ran, "yes");
+  dom.window.close();
+});
+
+test("the emulated system setting reaches the page's scripts", async () => {
+  const html =
+    '<script>document.documentElement.setAttribute("data-theme", matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")</script>';
+  const light = await storageWritesIn(html, "page.html", "light");
+  const dark = await storageWritesIn(html, "page.html", "dark");
+  assert.equal(light.theme, "light");
+  assert.equal(dark.theme, "dark");
+});
+
+test("the docs check takes the storage key prefix it expects as a flag", () => {
+  const arguments_ = parseArguments([
+    "--app=docs",
+    "--prefix=acme-docs",
+    "apps/docs/build",
+  ]);
+  assert.deepEqual(arguments_.problems, []);
+  assert.equal(arguments_.prefix, "acme-docs");
+  assert.equal(arguments_.root, "apps/docs/build");
+  assert.equal(arguments_.base, "/");
+  assert.deepEqual(arguments_.pages, DEFAULT_DOCS_PAGES);
+});
+
+test("the docs check refuses to run without a prefix, or with one that isn't a slug", () => {
+  assert.match(
+    parseArguments(["--app=docs", "build"]).problems.join(","),
+    /--prefix is required/,
+  );
+  assert.match(
+    parseArguments([
+      "--app=docs",
+      "--prefix=Not A Slug",
+      "build",
+    ]).problems.join(","),
+    /--prefix must be/,
+  );
+});
+
+test("the site check needs no prefix; a base path and the pages to use can be named", () => {
+  assert.deepEqual(parseArguments(["--app=site", "build/client"]).problems, []);
+  const arguments_ = parseArguments([
+    "--app=docs",
+    "--prefix=x-docs",
+    "--base=/sub",
+    "--use=a.html",
+    "--use=b/index.html",
+    "out",
+  ]);
+  assert.equal(arguments_.base, "/sub/");
+  assert.deepEqual(arguments_.pages, ["a.html", "b/index.html"]);
+  assert.match(
+    parseArguments(["--app=other", "out"]).problems.join(","),
+    /--app must be/,
+  );
+});

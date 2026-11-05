@@ -1,0 +1,55 @@
+{
+  "name": "template-website-docs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Starting point for a product website and versioned docs site: the shared frame, consent gate, checks and Cloudflare Pages deploy, with no brand.",
+  "author": "Shane",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-rabbit-hole-tech/template-website-docs.git"
+  },
+  "homepage": "https://github.com/the-rabbit-hole-tech/template-website-docs#readme",
+  "bugs": {
+    "url": "https://github.com/the-rabbit-hole-tech/template-website-docs/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/frame",
+    "packages/brand",
+    "apps/site",
+    "apps/docs"
+  ],
+  "scripts": {
+    "init-product": "node scripts/init-product.mjs",
+    "dev:site": "npm run dev -w @product/site",
+    "dev:docs": "npm run start -w @product/docs",
+    "build": "npm run build -w @product/site -w @product/docs",
+    "build:site": "npm run build -w @product/site",
+    "build:site:coming-soon": "npm run build:coming-soon -w @product/site",
+    "build:docs": "npm run build -w @product/docs",
+    "typecheck": "npm run typecheck -w @product/site -w @product/docs",
+    "test": "npm test --workspaces --if-present && node --test scripts/*.test.mjs",
+    "lint": "oxlint && oxfmt --check",
+    "lint:fix": "oxlint --fix && oxfmt",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "check:links": "node apps/site/scripts/check-links.mjs apps/site/build/client",
+    "check:storage:site": "node scripts/check-no-storage.mjs --app=site apps/site/build/client",
+    "check:storage:docs": "node scripts/check-no-storage.mjs --app=docs --prefix={{SLUG}}-docs apps/docs/build --base=${PREVIEW_BASE_PATH:-/}",
+    "check:images:docs": "node scripts/check-images.mjs apps/docs/build --base=${PREVIEW_BASE_PATH:-/} --site-url=https://{{DOCS_DOMAIN}}",
+    "check:fonts": "node scripts/check-fonts.mjs",
+    "check:docs-version": "node scripts/check-docs-version.mjs",
+    "docs:version": "node scripts/cut-docs-version.mjs"
+  },
+  "devDependencies": {
+    "@bugs5382/node-oxlint-config": "1.0.1",
+    "ajv": "^8.20.0",
+    "jsdom": "25.0.1",
+    "oxfmt": "^0.76.0",
+    "oxlint": "^1.91.0"
+  }
+}
