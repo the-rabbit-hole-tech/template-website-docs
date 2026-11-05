@@ -1,0 +1,10 @@
+{
+  "docs": [
+    {
+      "type": "category",
+      "label": "Introduction",
+      "collapsed": false,
+      "items": ["intro", "getting-started", "status"]
+    }
+  ]
+}

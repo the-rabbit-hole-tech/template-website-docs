@@ -1,0 +1,53 @@
+/* The site's base styles, on the shared frame tokens (packages/frame
+   site-frame.css, imported first in root.tsx). Plain CSS: no utility
+   framework and no UI kit, so a product brings its own look by changing the
+   tokens, not the markup. Theme: data-theme on <html> (app/theme.ts) picks
+   the frame's light or dark values. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--frame-bg);
+  color: var(--frame-ink);
+  font-family: var(--frame-font-sans);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--frame-ink);
+  line-height: 1.2;
+}
+
+p {
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+code,
+pre {
+  font-family: var(--frame-font-mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--frame-primary);
+  outline-offset: 2px;
+}
+
+/* The page column every part of the site lines up on, the same as the docs'. */
+.container {
+  width: 100%;
+  max-width: var(--frame-max);
+  margin-inline: auto;
+  padding-inline: var(--frame-gutter);
+}
