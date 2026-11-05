@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Builds and caches (apps/site and apps/docs). No bare docs/ entry: it would
+# ignore apps/docs and the root docs/ folder.
+build/
+build-sub-path/
+dist/
+.react-router/
+.docusaurus/
+.cache/
+coverage/
+*.tsbuildinfo
+*.log
+
+# local design notes - never committed
+plan/
+
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# local environment
+.env
