@@ -93,32 +93,35 @@ checks every value before it writes anything.
    `CLOUDFLARE_ACCOUNT_ID`, and the repository variable `SITE_COMING_SOON=true` while the product
    isn't launched yet. After the first published release, attach the domains to the two Pages
    projects in Cloudflare.
-9. Commit the result in one PR, and say in its body which template commit the product started
-   from (`git log -1 --format=%H` before step 2). That commit is where the next sync starts.
+9. Commit the result in one PR, and say in its body which template release the product started
+   from: the tag of the release the clone came from (the newest one on the template's Releases
+   page when it was made, for example `v1.2.0`). That tag is where the next sync starts.
 
 ## 🔁 Taking later template fixes
 
-A fix to anything this template shares lands here first; each product then takes it in its own
-PR. The product's history isn't the template's, so fixes come across commit by commit with
+A fix to anything this template shares lands here first, and every merge here publishes a
+release. Each product then takes the fixes in its own PR, from the release it last synced to a
+newer one: always tag to tag, never from a commit between releases. The product's history isn't the template's, so fixes come across commit by commit with
 `git cherry-pick`, which applies each fix's change on top of the product's tree.
 
 1. Add the template as a second remote, once, and fetch it:
 
    ```bash
    git remote add template https://github.com/the-rabbit-hole-tech/template-website-docs.git
-   git fetch template
+   git fetch template --tags
    ```
 
-2. On a branch, list the template commits since the last sync (the commit the product started
-   from, or the last one it took), then take each fix:
+2. On a branch, list the template's commits between the release the product last synced to (the
+   one it started from, or the last one it took) and the release it's syncing to, then take each
+   fix:
 
    ```bash
-   git log --oneline <last-synced>..template/main
+   git log --oneline <last-tag>..<new-tag>
    git cherry-pick -x <commit>
    ```
 
-   `-x` records the template commit in the product's commit message, so the next sync knows where
-   to start.
+   `-x` records the template commit in the product's commit message. Name both tags in the PR
+   body; the new one is where the next sync starts.
 
 3. Where a fix touches a line the product filled in or rebranded, the cherry-pick stops with a
    conflict: keep the product's value and the template's change around it. Lines that still hold a
