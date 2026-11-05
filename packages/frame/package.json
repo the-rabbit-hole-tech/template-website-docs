@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "description": "What the product site and the docs share: the product's name and addresses, site-frame.css, the current release and the consent-first preferences.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "exports": {
     "./site-frame.css": "./site-frame.css",
     "./product": "./product.ts",

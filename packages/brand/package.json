@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "description": "The product's mark, favicon, touch icon and link-preview card, served by both sites. The template ships neutral placeholders.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "exports": {
     "./public": "./public/",
     "./package.json": "./package.json"

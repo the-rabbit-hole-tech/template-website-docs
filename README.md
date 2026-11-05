@@ -77,6 +77,11 @@ npm run dev:site        # http://localhost:5173
 npm run dev:docs        # http://localhost:3000
 ```
 
+## 🙏 Acknowledgements
+
+template-website-docs was originally created by [@Bugs5382](https://github.com/Bugs5382).
+
 ## ⚖️ License
 
-MIT (c) 2026 Shane
+Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE); [AUTHORS](AUTHORS) lists who holds the
+copyright.

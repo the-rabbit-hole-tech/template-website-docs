@@ -54,7 +54,8 @@ a fix moves file for file.
   `npm run check:links`, `npm run check:storage:site`, `npm run check:storage:docs`,
   `npm run check:images:docs`, `npm run check:docs-version`, and
   `npm run build:coming-soon -w @product/site`
-- License headers: `task license` (check) and `task license:fix` (inject), MIT "2026 Shane"
+- License headers: `task license` (check) and `task license:fix` (inject): the two-line SPDX
+  Apache-2.0 header, "The template-website-docs Authors"
 
 ## Logging
 
